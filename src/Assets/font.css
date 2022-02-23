@@ -1,0 +1,5 @@
+@font-face {
+  font-family: "SimpsonsFont";
+  src: local("SimpsonsFont"), url("./Simpsonfont.otf") format("truetype");
+  font-weight: normal;
+}
