@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components";
+import styled, { keyframes } from "styled-components";
 import bgImg from "./Assets/Springfield.jpeg";
 import "./Assets/font.css";
 
@@ -15,6 +15,7 @@ export const Container = styled.div`
     ),
     url(${bgImg});
   background-size: cover;
+  position: relative;
 `;
 
 export const Title = styled.h2`
@@ -44,28 +45,64 @@ export const Quote = styled.div`
   height: 30%;
   margin: 20px auto;
 `;
-export const Character = styled.div``;
+
+const revelationChar = keyframes`
+  0% {
+  transform: scale(0.1);
+  }
+  20% {
+  transform: scale(0.2);
+  }
+  40% {
+  transform: scale(0.4);
+  }
+  60% {
+  transform: scale(0.6);
+  }
+  80% {
+  transform: scale(0.8);
+  }
+  100% {
+  transform: scale(1);
+}
+`;
+
+export const Character = styled.img`
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  animation: 1s ${revelationChar} ease-out;
+`;
 
 export const Controllers = styled.div`
   display: flex;
-  width: 50%;
+  justify-content: center;
   flex-wrap: wrap;
-  margin: 10px auto;
+  margin: 30px auto;
 `;
 
-export const Guess = styled.input`
-  background-color: transparent;
-  border: black solid 1px;
-  border-radius: 15px;
+export const Options = styled.div`
+  display: flex;
+  justify-content: center;
   padding-left: 15px;
   width: 100%;
+  margin: 20px 0;
+
+  input[type="radio"]:checked + label {
+    color: black;
+    border: black 0.5px dashed;
+  }
+`;
+
+export const Option = styled.input`
+  display: none;
 `;
 
 export const Button = styled.button<ButtonStyledProps>`
   background-color: ${(props) => (props.isRed ? "#ee0612" : "#2f64d6")};
   border-radius: 5px;
   color: #fff;
-  width: 45%;
+  width: 25%;
   margin: 10px 5px;
   cursor: pointer;
 `;
@@ -80,6 +117,17 @@ export const Results = styled.div`
   justify-content: space-between;
 `;
 
-export const SpanGuess = styled.span`
-  font-size: 18px;
+export const Label = styled.label`
+  font-size: 14px;
+  cursor: pointer;
+  margin: 0 10px;
+  background-color: #ff81c1;
+  border-radius: 5px;
+  padding: 10px;
+  color: white;
+  text-align: center;
+
+  &:hover {
+    color: black;
+  }
 `;

@@ -7,14 +7,13 @@ import {
   Text,
   Quote,
   Character,
-  Guess,
+  Options,
+  Option,
   Button,
   Controllers,
   Results,
-  SpanGuess,
+  Label,
 } from "./css";
-import fixName from "./Utils/fixName";
-import similarity from "./Utils/similarity";
 
 interface ICharacter {
   quote: string;
@@ -23,65 +22,74 @@ interface ICharacter {
 }
 
 function App() {
-  const [characterQuote, setCharacterQuote] = useState<ICharacter>();
-  const [userGuess, setUserGuess] = useState("");
-  const [userGuessCount, setUserGuessCount] = useState(0);
+  const [answer, setAnswer] = useState(0);
+  const [messageToUser, setMessageToUser] = useState("");
+  const [gameStatus, setGameStatus] = useState(false);
+  const [options, setOptions] = useState<ICharacter[]>([] as ICharacter[]);
+  const [optionSelected, setOptionSelected] = useState("");
 
   useEffect(() => {
     axios
-      .get("https://thesimpsonsquoteapi.glitch.me/quotes")
-      .then((res) => setCharacterQuote(res.data[0]));
+      .get("https://thesimpsonsquoteapi.glitch.me/quotes?count=3")
+      .then((res) => setOptions([...res.data]));
+
+    setAnswer(Math.floor(Math.random() * (4 - 1)) + 1);
   }, []);
 
   const handleTryClick = () => {
-    setUserGuessCount(userGuessCount + 1);
-    const character = characterQuote?.character as string;
-
-    const hitPercentage = similarity(fixName(character), fixName(userGuess));
-
-    if (hitPercentage >= 80) {
+    console.log(optionSelected, answer);
+    if (optionSelected === options[answer].character) {
+      setGameStatus(true);
     }
-
-    setUserGuess("");
   };
 
   return (
     <Container>
       <Title>Simpsons Quote</Title>
       <MainContent>
-        {!!characterQuote ? (
+        {!!options.length ? (
           <Quote>
-            <Text>
-              Lorem ipsum dolor, provident sunt non sint magni maiores.
-              Doloremque quae asperiores provident.
-            </Text>
-            {/* <Text>{characterQuote?.quote}</Text> */}
+            <Text>{options[answer]?.quote}</Text>
           </Quote>
         ) : (
           <Quote>
             <Text>Loading...</Text>
           </Quote>
         )}
-        {/* <Character>
-            <Text>Lorem ipsum dolor</Text>
-            <Text>{characterQuote?.character}</Text>
-          </Character> */}
+        <Text>
+          How said that
+          <span style={{ fontFamily: "sans-serif", fontWeight: "bold" }}>
+            ?
+          </span>
+        </Text>
         <Controllers>
-          <Guess
-            onChange={(e) => setUserGuess(e.target.value)}
-            type="text"
-            name="guess"
-            id="guess"
-            placeholder="Who said that"
-          />
+          <Options>
+            {options.map((option, i) => (
+              <>
+                <Option
+                  key={i}
+                  type={"radio"}
+                  id={`characterChoice${i}`}
+                  name="optionsCharacter"
+                  value={option.character}
+                  onChange={(e) => {
+                    setOptionSelected(e.target.value);
+                  }}
+                />
+                <Label htmlFor={`characterChoice${i}`}>
+                  {option.character}
+                </Label>
+              </>
+            ))}
+          </Options>
           <Button onClick={() => handleTryClick()}>Try</Button>
           <Button isRed>Give Up</Button>
         </Controllers>
         <Results>
-          <Text>Lorem ipsum dolor sit.</Text>
-          <SpanGuess>Attempts: {userGuessCount}</SpanGuess>
+          <Text>{messageToUser}</Text>
         </Results>
       </MainContent>
+      {gameStatus && <Character src={options[answer]?.image} />}
     </Container>
   );
 }
