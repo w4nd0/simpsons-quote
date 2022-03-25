@@ -121,7 +121,6 @@ export const Label = styled.label`
   font-size: 14px;
   cursor: pointer;
   margin: 0 10px;
-  background-color: #ff81c1;
   border-radius: 5px;
   padding: 10px;
   color: white;
@@ -130,4 +129,5 @@ export const Label = styled.label`
   &:hover {
     color: black;
   }
+
 `;

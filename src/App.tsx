@@ -27,17 +27,37 @@ function App() {
   const [gameStatus, setGameStatus] = useState(false);
   const [options, setOptions] = useState<ICharacter[]>([] as ICharacter[]);
   const [optionSelected, setOptionSelected] = useState("");
+  const [repeat, setRepeat] = useState(true);
+
+  const getData = async () => {
+    const data = await axios
+      .get("https://thesimpsonsquoteapi.glitch.me/quotes?count=3")
+
+      .then((res) => {
+        const chars = res.data;
+
+        const allChars = [
+          chars[0].character,
+          chars[1].character,
+          chars[2].character,
+        ];
+
+        const unique = [...new Set(allChars)];
+
+        if (unique.length === 3) {
+          console.log("passei aqui");
+          setOptions([...chars]);
+          return;
+        } else getData();
+      });
+  };
 
   useEffect(() => {
-    axios
-      .get("https://thesimpsonsquoteapi.glitch.me/quotes?count=3")
-      .then((res) => setOptions([...res.data]));
-
+    getData();
     setAnswer(Math.floor(Math.random() * (4 - 1)) + 1);
   }, []);
 
   const handleTryClick = () => {
-    console.log(optionSelected, answer);
     if (optionSelected === options[answer].character) {
       setGameStatus(true);
     }
@@ -77,7 +97,11 @@ function App() {
                   }}
                 />
                 <Label htmlFor={`characterChoice${i}`}>
-                  {option.character}
+                  <img
+                    src={option.image}
+                    style={{ maxHeight: "250px" }}
+                    alt="Character image"
+                  />
                 </Label>
               </>
             ))}
