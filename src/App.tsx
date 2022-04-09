@@ -45,7 +45,7 @@ function App() {
         const unique = [...new Set(allChars)];
 
         if (unique.length === 3) {
-          console.log("passei aqui");
+
           setOptions([...chars]);
           return;
         } else getData();
@@ -77,7 +77,7 @@ function App() {
           </Quote>
         )}
         <Text>
-          How said that
+          Who said that
           <span style={{ fontFamily: "sans-serif", fontWeight: "bold" }}>
             ?
           </span>
